@@ -12,7 +12,7 @@ var questions = [
         },
     },
     {
-        q: "which of the following foods is vegetarian?",
+        q: "Which of the following foods is vegetarian?",
         answers: {
             a1: "Swedish Fish",
             a2: "Caesar Salad",
@@ -47,25 +47,35 @@ var questions = [
             a4: "Maple Syrup"
         },
     },
+    {
+        q: "Which of the following foods can be eaten as part of the vegan and keto diet?",
+        answers: {
+            a1: "Rice",
+            a2: "Bread",
+            a3: "Butter",
+            a4: "Strawberries"
+        }
+    }
 ];
-var timer = 100;
+console.log(questions.length);
+var timer = 120;
+// start the page with the questions, the done button and the tally screen hidden
+$(".timer").hide();
 $(".question-holder").hide();
 $("#tally-holder").hide();
 $("#done").hide();
 
-console.log("<h4 class='a1'>" + questions[0].answers.a1 + "</h4>");
+// set the tally counters to zero
 var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unanswered = 0;
 var count = 0;
-//  Variable that will hold our interval ID when we execute
-//  the "run" function
+//  Variable that will hold our interval ID 
 var intervalId;
 
 function displayQuestion() {
     // displaying question and answers on the html
     $(".question-holder").show();
-    $(".correct-answer").hide();
     for (var i = 0; i < questions.length; i++) {
         $(".question-holder").append("<h3>" + questions[i].q + "</h3>" + "</br>");
         $(".question-holder").append("<input type='radio' name='Q" + i +
@@ -76,24 +86,16 @@ function displayQuestion() {
             "' value='q" + [i] + "a3'>" + " " + questions[i].answers.a3 + "  ");
         $(".question-holder").append("<input type='radio' name='Q" + i +
             "' value='q" + [i] + "a4'>" + " " + questions[i].answers.a4);
-
     }
-
-
 }
-
 //  When the stop button gets clicked, run the stop function.
 $("#done").on("click", stop);
-
 //  When the resume button gets clicked, execute the run function.
 $("#start").on("click", run);
 
-//  The run function sets an interval
-//  that runs the decrement function once a second.
-//  *****BUG FIX******** 
-//  Clearing the intervalId prior to setting our new intervalId will not allow multiple instances.
 function run() {
-    $(".timer").html(timer);
+    $(".timer").show();
+    $(".timer").html("Timer: " + timer + " seconds");
     intervalId = setInterval(decrement, 1000);
     $("#start").hide();
     $("#done").show();
@@ -102,14 +104,10 @@ function run() {
 
 //  The decrement function.
 function decrement() {
-
-    //  Decrease number by one.
+    //  Decrease the timer by one.
     timer--;
-
-    //  Show the number in the #show-number tag.
-    $(".timer").html(timer);
-
-
+    //  Display the active timer
+    $(".timer").html("Timer: " + timer + " seconds");
     //  Once number hits zero...
     if (timer === 0) {
         //  ...run the stop function.
@@ -117,14 +115,11 @@ function decrement() {
     }
 }
 
-
-//  The stop function
 function stop() {
 
     //  Clears our intervalId
-    //  We just pass the name of the interval
-    //  to the clearInterval function.
     clearInterval(intervalId);
+    // hides the questions, the timer and the done button
     $(".question-holder").hide();
     $(".timer").hide();
     $("#done").hide();
@@ -173,9 +168,18 @@ function stop() {
     } else {
         unanswered++;
     }
-
+    // question 6
+    if ($('input[value=q5a4]').prop('checked')) {
+        correctAnswers++;
+    }
+    else if ($('input[value=q5a1]').prop('checked') || $('input[value=q5a2]').prop('checked') || $('input[value=q5a3]').prop('checked')) {
+        incorrectAnswers++;
+    } else {
+        unanswered++;
+    }
     showTally();
 }
+// displays all the tallies at the end
 function showTally() {
     $("#tally-holder").show();
     $("#tally-holder").html("All done! </br>Here is how you did: </br>");
@@ -185,8 +189,3 @@ function showTally() {
 }
 
 
-// Q1
-function checkAnswers() {
-
-
-}
